@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"github.com/koishimasato/go-sample/transaction/application"
 	"github.com/koishimasato/go-sample/transaction/domain/service"
-	"github.com/koishimasato/go-sample/transaction/infrastructure/repositories"
+	"github.com/koishimasato/go-sample/transaction/infrastructure/repository"
 )
 
 func main() {
-	r := repositories.NewUserRepository()
+	r := repository.NewUserRepository()
 	s := service.NewUserService(r)
 	a := application.NewUserApplicationService(r, s)
 
