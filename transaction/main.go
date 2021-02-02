@@ -14,6 +14,6 @@ func main() {
 
 	err := a.Register("hoge")
 	if err != nil {
-		fmt.Println("登録に失敗しました。")
+		fmt.Println(err.Error())
 	}
 }
