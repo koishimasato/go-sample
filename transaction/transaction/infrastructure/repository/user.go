@@ -26,8 +26,8 @@ func (r *UserRepositoryImpl) FindByName(name model.UserName) (*model.User, error
 	return nil, nil
 }
 
-func (r *UserRepositoryImpl) Save(user *model.User, tx *gorp.Transaction) error {
-	err := tx.Insert(user)
+func (r *UserRepositoryImpl) Save(user *model.User) error {
+	err := r.Exec.Insert(user)
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func (r *UserRepositoryImpl) Save(user *model.User, tx *gorp.Transaction) error 
 	return nil
 }
 
-func (r *UserRepositoryImpl) Delete(user *model.User, tx *gorp.Transaction) error {
+func (r *UserRepositoryImpl) Delete(user *model.User) error {
 	fmt.Println("deleted!")
 	return nil
 }

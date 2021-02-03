@@ -3,12 +3,14 @@ package model
 import (
 	"errors"
 	"github.com/google/uuid"
+	"github.com/koishimasato/go-sample/transaction/domain/repository"
 )
 
 // User ユーザー型
 type User struct {
 	id   UserID
 	name UserName
+	repository.Entity // Goで継承していいものかわからない
 }
 
 // NewUser ユーザーを生成する
@@ -23,7 +25,10 @@ func NewUser(id *UserID, name UserName) (*User, error) {
 			return nil, err
 		}
 	}
-	return &User{id: *id, name: name}, nil
+
+	u := &User{id: *id, name: name}
+	u.MarkNew()
+	return u, nil
 }
 
 // ID ユーザーのIDを取得する
@@ -39,6 +44,7 @@ func (u *User) Name() UserName {
 // ChangeName ユーザーの名前を変更する
 func (u *User) ChangeName(name UserName) {
 	u.name = name
+	u.MarkDirty()
 }
 
 
