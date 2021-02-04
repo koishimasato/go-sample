@@ -9,14 +9,13 @@ import (
 
 // UserApplicationService ユーザーアプリケーションサービス
 type UserApplicationService struct {
-	userRepository repository.UserRepository
 	userService    *service.UserService
 	uow repository.UnitOfWork
 }
 
 // NewUserApplicationService 新しいユーザーアプリケーションサービスを生成する
-func NewUserApplicationService(r repository.UserRepository, s *service.UserService, uow repository.UnitOfWork) *UserApplicationService {
-	return &UserApplicationService{userRepository: r, userService: s, uow: uow}
+func NewUserApplicationService(s *service.UserService, uow repository.UnitOfWork) *UserApplicationService {
+	return &UserApplicationService{userService: s, uow: uow}
 }
 
 // Register ユーザーを登録する
@@ -41,8 +40,8 @@ func (s *UserApplicationService) Register(name string) error {
 		return errors.New("ユーザーは既に存在しています")
 	}
 
-	// ユーザーを登録する (これはいらないのでは？)
-	err = s.userRepository.Save(user)
+	// ユニットオブワークのリポジトリを呼び出し、ユーザーを登録する
+	err = s.uow.UserRepository().Save(user)
 
 	// uowにDB登録の仕事を丸投げする
 	return s.uow.Commit()

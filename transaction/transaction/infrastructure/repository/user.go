@@ -4,22 +4,25 @@ import (
 	"fmt"
 	"github.com/koishimasato/go-sample/transaction/domain/model"
 	"github.com/koishimasato/go-sample/transaction/domain/repository"
-	"github.com/koishimasato/go-sample/transaction/infrastructure/db"
 	"gopkg.in/gorp.v1"
 )
 
 type UserRepositoryImpl struct {
-	Exec gorp.SqlExecutor
+	tx gorp.Transaction
+	users map[model.UserID]*model.User
 }
 
-func NewUserRepository() repository.UserRepository {
+func NewUserRepository(transaction gorp.Transaction) repository.UserRepository {
 	return &UserRepositoryImpl{
-		Exec: db.GetDBMap(),
+		tx: transaction,
 	}
 }
 
-func (r *UserRepositoryImpl) Find(user model.UserID) (*model.User, error) {
-	return nil, nil
+func (r *UserRepositoryImpl) Find(userID model.UserID) (*model.User, error) {
+	user := &model.User{} // user取得コード
+	r.users[userID] = user
+	
+	return user, nil
 }
 
 func (r *UserRepositoryImpl) FindByName(name model.UserName) (*model.User, error) {
@@ -27,12 +30,21 @@ func (r *UserRepositoryImpl) FindByName(name model.UserName) (*model.User, error
 }
 
 func (r *UserRepositoryImpl) Save(user *model.User) error {
-	err := r.Exec.Insert(user)
-	if err != nil {
-		return err
+	// ユーザが存在する場合
+	if _, ok := r.users[user.ID()]; ok {
+		// Updateする
+		_, err := r.tx.Update(user)
+		if err != nil {
+			return err
+		}
+	} else {
+		// insertする
+		err := r.tx.Insert(user)
+		if err != nil {
+			return err
+		}
 	}
 
-	fmt.Println("saved!")
 	return nil
 }
 
