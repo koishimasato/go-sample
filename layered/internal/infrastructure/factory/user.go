@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/koishimasato/go-sample/internal/domain/factory"
 	"github.com/koishimasato/go-sample/internal/domain/model"
+	"log"
 )
 
 type UserFactoryImpl struct {
@@ -16,6 +17,7 @@ func NewUserFactory() factory.UserFactory {
 
 func (r *UserFactoryImpl) Create(name model.UserName) (*model.User, error) {
 	newUUID, err := uuid.NewUUID()
+	log.Println(newUUID)
 	if err != nil {
 		return nil, err
 	}

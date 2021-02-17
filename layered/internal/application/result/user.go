@@ -3,26 +3,26 @@ package result
 import "github.com/koishimasato/go-sample/internal/domain/model"
 
 type UserGetResult struct {
-	user *model.User
+	User *model.User
 }
 
 func NewUserGetResult(user model.User) *UserGetResult {
-	return &UserGetResult{user: &user}
+	return &UserGetResult{User: &user}
 }
 
 type UserGetAllResult struct {
-	users []*model.User
+	Users []*model.User
 }
 
 func NewUserGetAllResult(users []*model.User) *UserGetAllResult {
-	return &UserGetAllResult{users: users}
+	return &UserGetAllResult{Users: users}
 }
 
 type UserRegisterResult struct {
-	user *model.User
+	User *model.User
 }
 
 func NewUserRegisterResult(user *model.User) *UserRegisterResult {
-	return &UserRegisterResult{user: user}
+	return &UserRegisterResult{User: user}
 }
 

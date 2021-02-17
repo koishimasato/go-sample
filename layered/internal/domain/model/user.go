@@ -5,8 +5,8 @@ import (
 )
 
 type User struct {
-	id   UserID
-	name UserName
+	id       UserID
+	name     UserName
 	userType UserType
 }
 
@@ -73,14 +73,31 @@ func (u *UserName) Value() string {
 	return u.value
 }
 
-type UserType string
+type UserType int
 
 const (
-	Premium = UserType("Premium")
-	Normal = UserType("Normal")
+	Premium UserType = iota + 1
+	Normal
 )
 
-func (u *UserType) Value() string {
-	return u.Value()
+func NewUserType(i int) UserType {
+	switch i {
+	case 1:
+		return Premium
+	case 2:
+		return Normal
+	default:
+		return Normal
+	}
 }
 
+func (t UserType) Value() string {
+	switch t {
+	case Premium:
+		return "Premium"
+	case Normal:
+		return "Normal"
+	default:
+		return "Normal"
+	}
+}

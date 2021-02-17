@@ -1,6 +1,7 @@
-package application
+package service
 
 import (
+	"database/sql"
 	"errors"
 	"github.com/koishimasato/go-sample/internal/application/command"
 	"github.com/koishimasato/go-sample/internal/application/result"
@@ -17,8 +18,8 @@ type UserApplicationService struct {
 	userService    service.UserService
 }
 
-func NewUserApplicationService(f factory.UserFactory, r repository.UserRepository, s service.UserService) *UserApplicationService {
-	return &UserApplicationService{userFactory: f, userRepository: r, userService: s}
+func NewUserApplicationService(f factory.UserFactory, r repository.UserRepository, s service.UserService) UserApplicationService {
+	return UserApplicationService{userFactory: f, userRepository: r, userService: s}
 }
 
 func (s *UserApplicationService) Get(command command.UserGetCommand) (*result.UserGetResult, error) {
@@ -73,12 +74,11 @@ func (s *UserApplicationService) Update(command command.UserUpdateCommand) error
 		return err
 	}
 	user, err := s.userRepository.Find(*id)
+	if user == nil || err == sql.ErrNoRows {
+		return errors.New("ユーザーが存在しません")
+	}
 	if err != nil {
 		return err
-	}
-
-	if user == nil {
-		return errors.New("ユーザーが存在しません")
 	}
 
 	name, err := model.NewUserName(command.Name)

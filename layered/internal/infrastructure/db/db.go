@@ -3,10 +3,15 @@ package db
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/koishimasato/go-sample/internal/domain/model"
 	"gopkg.in/gorp.v1"
 	"log"
 )
+
+type User struct {
+	ID       string `db:"id"`
+	Name     string `db:"name"`
+	UserType int    `db:"user_type"`
+}
 
 var dbmap *gorp.DbMap
 
@@ -16,7 +21,7 @@ func init() {
 
 	_dbmap := &gorp.DbMap{Db: db, Dialect: gorp.MySQLDialect{"InnoDB", "UTF8"}}
 
-	_dbmap.AddTableWithName(model.User{}, "users").SetKeys(false, "id")
+	_dbmap.AddTableWithName(User{}, "users").SetKeys(false, "id")
 
 	err = _dbmap.CreateTablesIfNotExists()
 	checkErr(err, "Create tables failed")
