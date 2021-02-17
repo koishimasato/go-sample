@@ -5,7 +5,6 @@ import (
 	_ "github.com/koishimasato/go-sample/internal/domain/model"
 )
 
-// UserRepository ユーザーリポジトリーインターフェース
 type UserRepository interface {
 	Find(model.UserID) (*model.User, error)
 	FindByName(model.UserName) (*model.User, error)

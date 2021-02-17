@@ -11,7 +11,6 @@ import (
 	"github.com/koishimasato/go-sample/internal/domain/service"
 )
 
-// UserApplicationService ユーザーアプリケーションサービス
 type UserApplicationService struct {
 	userFactory    factory.UserFactory
 	userRepository repository.UserRepository
@@ -109,12 +108,11 @@ func (s *UserApplicationService) Delete(command command.UserDeleteCommand) error
 		return err
 	}
 	user, err := s.userRepository.Find(*id)
+	if user == nil || err == sql.ErrNoRows {
+		return nil
+	}
 	if err != nil {
 		return err
-	}
-
-	if user == nil {
-		return nil
 	}
 
 	err = s.userRepository.Delete(user)
